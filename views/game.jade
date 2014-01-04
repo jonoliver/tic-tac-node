@@ -1,0 +1,23 @@
+extends layout
+block content
+  div.container
+    div#cell-0.cell.top.left
+    div#cell-1.cell.cell.top
+    div#cell-2.cell.cell.top.right
+    div#cell-3.cell.left
+    div#cell-4.cell.center
+    div#cell-5.cell.right
+    div#cell-6.cell.bottom.left
+    div#cell-7.cell.bottom
+    div#cell-8.cell.bottom.right
+  
+  script(src='http://codeorigin.jquery.com/jquery-2.0.3.min.js' type='text/javascript')
+  script(src='/socket.io/socket.io.js')
+  
+  // global variables. will be finding a better way to handle this
+  script.
+    window.playerMarker = '#{player.marker}';
+    window.savedBoard = '#{board}'.split(',');
+    
+  script(src='javascripts/board.js' type='text/javascript')
+  script(src='javascripts/game.js' type='text/javascript')

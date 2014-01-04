@@ -1,0 +1,53 @@
+cellColor = #B0CFCF
+cellColorHover = #BBD6D6
+
+body {
+  font-family: Sans-Serif;
+  text-align: center;
+}
+.container {
+	width: 157px;
+	margin: 0 auto;
+	border-radius: 5px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.cell {
+	width: 50px;
+	height: 50px;
+	float: left;
+	border: solid 1px white;
+	background-color: cellColor;
+	color: white;
+}
+.cell:hover {
+	background-color: cellColorHover;
+	cursor: pointer;
+}
+.cell.locked
+	background-color: cellColor
+	cursor: default;
+	
+.top.left { border-top-left-radius: 18px; }
+.top.right { border-top-right-radius: 18px; }
+.bottom.left { border-bottom-left-radius: 18px; }
+.bottom.right { border-bottom-right-radius: 18px; }
+.move {
+	display: block;
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+	line-height: 50px;
+}
+.move.highlight {
+	color: #F3F366;
+}
+/*
+#reset {
+	display: block;
+	clear: left;
+}

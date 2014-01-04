@@ -1,0 +1,29 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node_modules\\.bin\\supervisor app.js"
+  },
+  "dependencies": {
+    "express": "3.4.4",
+    "jade": "*",
+    "stylus": "*",
+		"socket.io": "*",
+		"session.socket.io": "*",
+		"uid2": "*"
+  },
+	"devDependencies": {
+		"supervisor": "*",
+		"mocha": "*",
+		"sinon": "*",
+    "grunt": "*",
+    "grunt-mocha-test": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-nodeunit": "*",
+    "grunt-contrib-uglify": "*"
+  }
+
+}
