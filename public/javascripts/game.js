@@ -1,7 +1,7 @@
 var gameId = GetQueryVariable(window.location.search, 'id');
 console.log('gameId');
 console.log(gameId);
-var socket = io.connect('http://localhost:3000?id=' + gameId);
+var socket = io.connect('?id=' + gameId);
 
 socket.on('update', function (data) {
 	console.log('data', data);
