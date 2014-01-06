@@ -58,7 +58,7 @@ var Game = function(gameId){
     
     board[position] = player.marker;
     var win = isWin(player.marker);
-    var tie = isTie();
+    var tie = (win) ? false : isTie();
     
     if (win || tie) {
       resetBoard();
