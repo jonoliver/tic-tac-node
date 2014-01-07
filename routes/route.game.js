@@ -79,6 +79,7 @@ exports.onConnection = function(socket, sessionStore, cookieParser){
         returnData.turn = play.turn;
         returnData.isWin = play.isWin;
         returnData.isTie = play.isTie;
+        returnData.winningSquares = play.winningSquares;
       }
       else {
         returnData.error = play.error;

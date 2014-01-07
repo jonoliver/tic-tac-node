@@ -57,7 +57,8 @@ var Game = function(gameId){
     }
     
     board[position] = player.marker;
-    var win = isWin(player.marker);
+    var winCalculation = calculateWin(player.marker);
+    var win = winCalculation.isWin;
     var tie = (win) ? false : isTie();
     
     if (win || tie) {
@@ -73,6 +74,7 @@ var Game = function(gameId){
       success: true,
       isWin: win,
       isTie: tie,
+      winningSquares: winCalculation.winningSquares || null,
       turn: currentTurn, //TODO: get rid of?
       board: board
     };
@@ -90,7 +92,9 @@ var Game = function(gameId){
     turn = (turn === "X") ? "O" : "X";
   }
   
-	function isWin(play){
+	function calculateWin(play){
+        var returnData = { isWin: true };
+
 		// check center square first
 		if (board[4] === play){
 			for (var i=0; i < board.length; i++){
@@ -98,33 +102,44 @@ var Game = function(gameId){
 				if (i === 4 || currentSquare !== play) continue;
 				
 				var oppositeSquare = 4 + (4 - i);
-				if (board[oppositeSquare] === play)
-					return true;
+				if (board[oppositeSquare] === play){
+                    returnData.winningSquares = [i, 4, oppositeSquare];
+					return returnData;
+                }
 			}
 		}
 		
 		if (board[0] === play){
 			//check right
-			if (board[1] === play && board[2] === play)
-				return true;
+			if (board[1] === play && board[2] === play){
+                returnData.winningSquares = [0,1,2];
+				return returnData;
+            }
 			// check down	
-			if (board[3] === play && board[6] === play)
-				return true;
+			if (board[3] === play && board[6] === play){
+                returnData.winningSquares = [0,3,6];
+				return returnData;
+            }
 		}
 		
 		if (board[2] === play){
 			// check down			
-			if (board[5] === play && board[8] === play)
-				return true;	
+			if (board[5] === play && board[8] === play) {
+                returnData.winningSquares = [2,5,8];
+				return returnData;
+            }
 		}
 		
 		if (board[6] === play){
 			//check right
-			if (board[7] === play && board[8] === play)
-				return true;		
+			if (board[7] === play && board[8] === play){
+                returnData.winningSquares = [6,7,8];
+				return returnData;
+            }
 		}
 		
-		return false;
+        returnData.isWin = false;
+		return returnData;
 	}
   
 	function isTie(){

@@ -9,6 +9,7 @@ socket.on('update', function (data) {
 	$(".cell").removeClass('locked');
 	
 	if (data.isWin) {
+        highlightSquares(data.winningSquares);
 		alert((data.turn === playerMarker) ? 'You win!' : 'You lose!');
 	} else if (data.isTie) {
 		alert("It's a tie!");
@@ -54,6 +55,12 @@ function updateSquare(player, position) {
 
 function resetSquare(position) {
 	$('#cell-' + position).html('');
+}
+
+function highlightSquares(squares){
+    for (var i = 0; i < squares.length; i++){
+        $('#cell-' + squares[i]).find('.move').addClass('highlight');
+    }
 }
 
 function updateBoard(board, position) {
