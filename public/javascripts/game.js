@@ -27,21 +27,6 @@ socket.on('error', function (data) {
 updateBoard(gameSettings.savedBoard);
 updateTurn(gameSettings.currentTurn);
 
-  // parses the query string provided and returns the value
-function GetQueryVariable(query, name) {
-  if (query.indexOf("?") === 0) { query = query.substr(1); }
-  var pairs = query.split("&");
-  for (var i = 0; i < pairs.length; i++) {
-    var pair = pairs[i].split("=");
-    if (pair[0] == name) {
-      return pair[1];
-    }
-  }
-  return "";
-}
-
-var board = new Board();
-
 $(".cell").click(function () {
   if (!$(this).hasClass('locked') && $(this).find(".move").size() === 0) {
     $(".cell").addClass('locked');
@@ -87,4 +72,17 @@ function updateBoard(board, position) {
       $('#cell-' + i).html(html);
     }
   }
+}
+
+// parses the query string provided and returns the value
+function GetQueryVariable(query, name) {
+  if (query.indexOf("?") === 0) { query = query.substr(1); }
+  var pairs = query.split("&");
+  for (var i = 0; i < pairs.length; i++) {
+    var pair = pairs[i].split("=");
+    if (pair[0] == name) {
+      return pair[1];
+    }
+  }
+  return "";
 }
