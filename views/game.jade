@@ -25,7 +25,8 @@ block content
     // global variables. will be finding a better way to handle this
     window.gameSettings = {
       playerMarker: '#{player.marker}',
-      savedBoard: '#{board}'.split(',') 
+      savedBoard: '#{board}'.split(','),
+      currentTurn: '#{turn}'
     };
     
   script(src='javascripts/board.js' type='text/javascript')

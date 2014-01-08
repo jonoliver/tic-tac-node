@@ -161,6 +161,10 @@ var Game = function (gameId) {
     //return players.length > 1;   
   }
 
+  function getTurn(){
+    return turn;
+  }
+
   //@newBoard is to set board for testing
   function resetBoard(newBoard) {
     board = newBoard || [];
@@ -171,6 +175,7 @@ var Game = function (gameId) {
     //isFull: gameIsFull,
     authenticate: authenticate,
     play: play,
+    getTurn: getTurn,
     resetBoard: resetBoard
   };
 };

@@ -25,6 +25,7 @@ socket.on('error', function (data) {
 });
 
 updateBoard(gameSettings.savedBoard);
+updateTurn(gameSettings.currentTurn);
 
   // parses the query string provided and returns the value
 function GetQueryVariable(query, name) {

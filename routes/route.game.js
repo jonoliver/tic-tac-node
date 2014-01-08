@@ -21,7 +21,11 @@ exports.gameRoute = function(req, res){
     console.log('auth');
     console.log(auth);
     res.render('game', { 
-      title: 'DEV TAB!!!', player: auth.player, board: auth.board });
+      title: 'DEV TAB!!!', 
+      player: auth.player, 
+      turn: game.getTurn(),
+      board: auth.board 
+    });
   }
 };
 
