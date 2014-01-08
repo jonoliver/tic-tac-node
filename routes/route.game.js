@@ -20,7 +20,8 @@ exports.gameRoute = function(req, res){
     var auth = game.authenticate(playerId);
     console.log('auth');
     console.log(auth);
-    res.render('game', { title: 'DEV TAB!!!', player: auth.player, board: auth.board });
+    res.render('game', { 
+      title: 'DEV TAB!!!', player: auth.player, board: auth.board });
   }
 };
 
@@ -76,7 +77,8 @@ exports.onConnection = function(socket, sessionStore, cookieParser){
       var play = game.play(sessionKey, data.position);
       returnData.board = play.board;
       if (play.success) {
-        returnData.turn = play.turn;
+        returnData.lastTurn = play.lastTurn;
+        returnData.currentTurn = play.currentTurn;
         returnData.isWin = play.isWin;
         returnData.isTie = play.isTie;
         returnData.winningSquares = play.winningSquares;
