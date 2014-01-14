@@ -6,86 +6,75 @@ var game = require('../modules/game');
 var player = require('../modules/player');
 
 var req = {}, res = {};
-var gameCreate;
+var gameCreate, gameGet;
 
-describe('Game route', function(){
-	beforeEach(function(){
-		req = {
-			query: {},
-			session: {}
-		};
+describe('Game route', function () {
+  beforeEach(function () {
+    req = {
+      query: {},
+      session: {}
+    };
 
-		res = {
-			render: function(){}	
-		};
-		var testGame = { id: 'gameId!', authenticate: function(){ return true; }};
-		gameCreate = sinon.stub(game, 'create')
+    res = {
+      render: function () { },
+      redirect: function () { }
+    };
+    var testGame = { id: 'gameId', authenticate: function () { return true; }, getTurn: function () { } };
+    gameCreate = sinon.stub(game, 'create')
 			.returns(testGame);
-		});
-	
-	afterEach(function(){
-		gameCreate.restore();
-	});
 
-	describe('Query string has NO game id', function(){
-		
-			it('creates new game', function(){
-				route.game(req, res);
-				sinon.assert.calledOnce(game.create);
-				sinon.assert.calledWith(game.create, null);
-			});
-			
-			it('creates new game with specified game id', function(){
-				
-				req.query.id = 'id';
-				route.game(req, res);
-				sinon.assert.calledOnce(game.create);
-				sinon.assert.calledWith(game.create, req.query.id);
-		});
-	});
-	
-	describe('Query string HAS game id', function(){
-		var gameGet;
-		beforeEach(function(){
-			gameGet = sinon.stub(game, 'get');
-		});
-		
-		afterEach(function(){
-			gameGet.restore();
-		});
-		
-		it('retrieves existing game', function(){
-			gameGet.returns({ id: 'gameId', authenticate: function(){ return true; }});			
-				
-			req.query.id = 'gameId';
+    gameGet = sinon.stub(game, 'get')
+			.returns(testGame);
+  });
 
-			route.game(req, res);
-			sinon.assert.calledOnce(game.get);
-			game.get.restore();
-		});
-		
-		describe('game does NOT exist', function(){
-			
-			it('creates new game', function(){
-				gameGet.returns(null);
-				req.query.id = 'gameId';
-				route.game(req, res);
-				sinon.assert.calledOnce(game.create);
-				sinon.assert.calledWith(game.create, req.query.id);
-			});
-		});
-		describe('game exists', function(){
-			
-		});
-	});
-	/*
+  afterEach(function () {
+    gameCreate.restore();
+    gameGet.restore();
+  });
+
+  describe('Query string has NO game id', function () {
+
+    it('creates new game', function () {
+      route.gameRoute(req, res);
+      sinon.assert.calledOnce(game.create);
+      sinon.assert.calledWith(game.create, null);
+    });
+
+  });
+
+  describe('Query string HAS game id', function () {
+
+    describe('game exists', function () {
+      it('retrieves existing game', function () {
+
+        req.query.id = 'gameId';
+
+        route.gameRoute(req, res);
+        sinon.assert.calledOnce(game.get);
+      });
+    });
+
+    describe('game does NOT exist', function () {
+
+      it('creates new game', function () {
+        gameGet.returns(null);
+        req.query.id = 'gameId';
+        route.gameRoute(req, res);
+        sinon.assert.calledOnce(game.create);
+        sinon.assert.calledWith(game.create, req.query.id);
+      });
+    });
+  });
+
+  //TODO:Assert that game.authenticate, response.redirect, response.render are called correctly
+  /*
 	
 	it('joins player to game', function(){
 		var testGame = { id: 'gameId!', join: function(){}};
 		var gameJoin = sinon.stub(testGame, 'join').returns(true);
 		gameCreate.returns(testGame);
 		req.session.playerId = 'playerId';	
-		route.game(req, res);
+		route.gameRoute(req, res);
 		
 		sinon.assert.calledOnce(game.join);
 		sinon.assert.calledWith(game.join, req.session.playerId);
@@ -99,13 +88,13 @@ describe('Game route', function(){
 			.returns({ id: 'playerId!'});
 			
 			it('creates new player', function(){
-				route.game(req, res);
+				route.gameRoute(req, res);
 				sinon.assert.calledOnce(player.create);
 				
 			});
 			it('stores player id in session', function(){
 				assert.equal(req.session.playerId, undefined);
-				route.game(req, res);
+				route.gameRoute(req, res);
 				console.log('req', req);
 				assert.equal(req.session.playerId, 'playerId!');
 			});
@@ -123,7 +112,7 @@ describe('Game route', function(){
 			});
 			it('retrieves existing player', function(){
 				req.session.playerId = 'playerId';
-				route.game(req, res);
+				route.gameRoute(req, res);
 			});
 		});
 	});	

@@ -55,10 +55,7 @@ describe('Game route', function(){
       newGame = game.create();
       newGame.authenticate(playerId1);
       newGame.authenticate(playerId2);      
-      /*
-      beforeEach(function(){
-      });
-      */
+
       it('turn does not succeed if not current players turn', function(){
         var turn = newGame.play(playerId2, 0);
         assert.notEqual(turn.success, true);
