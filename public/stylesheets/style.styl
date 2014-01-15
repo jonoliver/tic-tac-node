@@ -1,5 +1,11 @@
 cellColor = #B0CFCF
 cellColorHover = #BBD6D6
+buttonColor = #E6E6E6
+
+border-radius()
+  -webkit-border-radius arguments
+  -moz-border-radius arguments
+  border-radius arguments
 
 body {
   font-family: Sans-Serif;
@@ -32,10 +38,11 @@ body {
 	background-color: cellColor
 	cursor: default
 	
-.top.left { border-top-left-radius: 18px; }
-.top.right { border-top-right-radius: 18px; }
-.bottom.left { border-bottom-left-radius: 18px; }
-.bottom.right { border-bottom-right-radius: 18px; }
+.top.left { border-radius: 18px 0 0 0 }
+.top.right { border-radius: 0 18px 0 0 }
+.bottom.left { border-radius: 0 0 0 18px }
+.bottom.right { border-radius: 0 0 18px 0 }
+
 .move {
 	display: block;
 	text-align: center;
@@ -47,8 +54,10 @@ body {
 	color: #F3F366;
 }
 .playagain 
-  display block
   cursor pointer
+  background-color buttonColor
+  padding 10px
+  border-radius 8px
 
 .clear 
   clear both
