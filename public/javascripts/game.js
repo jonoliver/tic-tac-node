@@ -1,7 +1,7 @@
 var gameId = GetQueryVariable(window.location.search, 'id');
-console.log('gameId');
-console.log(gameId);
 var socket = io.connect('?id=' + gameId);
+
+initPageView(gameSettings);
 
 socket.on('update', function (data) {
   console.log('data', data);
@@ -11,9 +11,9 @@ socket.on('update', function (data) {
 
   if (data.isWin) {
     highlightSquares(data.winningSquares);
-    if (confirm((data.lastTurn === gameSettings.playerMarker) ? 'You win! Play again?' : 'You lose! Play again?')) {
-      resetBoard();
-    }
+    var notification = (data.lastTurn === gameSettings.playerMarker) ? 'You win!' : 'You lose!';
+    $('.notifier').html(notification);
+    $('.playagain').show();
   } else if (data.isTie) {
     alert("It's a tie!");
   }
@@ -23,10 +23,7 @@ socket.on('error', function (data) {
   console.log('error', data.error);
   resetSquare(data.position);
 });
-
-updateBoard(gameSettings.savedBoard);
-updateTurn(gameSettings.currentTurn);
-
+// DOM EVENTS
 $(".cell").click(function () {
   if (!$(this).hasClass('locked') && $(this).find(".move").size() === 0) {
     $(".cell").addClass('locked');
@@ -38,9 +35,22 @@ $(".cell").click(function () {
   }
 });
 
+$('.playagain').click(function(){
+  //TODO: call to server to get new game properties
+  resetBoard();
+  $(this).hide();
+});
+// END DOM EVENTS
+function initPageView(gameSettings){
+  updateBoard(gameSettings.savedBoard);
+  updateTurn(gameSettings.currentTurn);
+
+  $('.notifier').show();
+}
+
 function updateTurn(turn) {
   var fillText = (turn === gameSettings.playerMarker) ? 'your' : turn + "'s";
-  $('.playerIndicator').text(' ' + fillText + ' ');
+  $('.notifier').text("It's " + fillText + " turn!");
 }
 
 function updateSquare(player, position) {

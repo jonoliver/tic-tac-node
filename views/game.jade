@@ -13,10 +13,8 @@ block content
 
   div.clear
   div.info
-    p.turn 
-      | It's 
-      span.playerIndicator
-      | turn!
+    p.notifier.hidden
+    a.playagain.hidden Play again?
   
   script(src='http://codeorigin.jquery.com/jquery-2.0.3.min.js' type='text/javascript')
   script(src='/socket.io/socket.io.js')
