@@ -1,8 +1,8 @@
 var gameId = GetQueryVariable(window.location.search, 'id');
-var socket = io.connect('?id=' + gameId);
+//var socket = io.connect('?id=' + gameId);
 
 initPageView(gameSettings);
-
+/*
 socket.on('update', function (data) {
   console.log('data', data);
   updateSquare(data.lastTurn, data.position);
@@ -15,7 +15,8 @@ socket.on('update', function (data) {
     $('.notifier').html(notification);
     $('.playagain').show();
   } else if (data.isTie) {
-    alert("It's a tie!");
+    $('.notifier').html("It's a tie!");
+    $('.playagain').show();
   }
 });
 
@@ -23,6 +24,7 @@ socket.on('error', function (data) {
   console.log('error', data.error);
   resetSquare(data.position);
 });
+*/
 // DOM EVENTS
 $(".cell").click(function () {
   if (!$(this).hasClass('locked') && $(this).find(".move").size() === 0) {
@@ -43,9 +45,9 @@ $('.playagain').click(function(){
 // END DOM EVENTS
 function initPageView(gameSettings){
   updateBoard(gameSettings.savedBoard);
-  updateTurn(gameSettings.currentTurn);
+  //updateTurn(gameSettings.currentTurn);
 
-  $('.notifier').show();
+  //$('.notifier').show();
 }
 
 function updateTurn(turn) {
@@ -96,3 +98,106 @@ function GetQueryVariable(query, name) {
   }
   return "";
 }
+// angular
+var app = angular.module('app', []);
+
+app.factory('socket', function ($rootScope) {
+  var socket = io.connect('?id=' + gameId);
+  return {
+    on: function (eventName, callback) {
+      socket.on(eventName, function () {  
+        var args = arguments;
+        $rootScope.$apply(function () {
+          callback.apply(socket, args);
+        });
+      });
+    },
+    emit: function (eventName, data, callback) {
+      socket.emit(eventName, data, function () {
+        var args = arguments;
+        $rootScope.$apply(function () {
+          if (callback) {
+            callback.apply(socket, args);
+          }
+        });
+      });
+    }
+  };
+});
+
+function gameCtrl($scope, socket){
+  
+  var opponentMarker = (gameSettings.playerMarker === "X") ? "O" : "X"; // sketchy, fix
+
+  $scope.board = [
+    { css: 'top left'},
+    { css: 'top'},
+    { css: 'top right'},
+    { css: 'left'},
+    { css: 'center'},
+    { css: 'right'},
+    { css: 'bottom left'},
+    { css: 'bottom'},
+    { css: 'bottom right'}
+  ];
+  
+  $scope.isTurn = true;
+  $scope.notification = '';
+
+  $scope.play = function(i){
+    if ($scope.isTurn){
+      makeMove(i);
+      socket.emit('play', { id: gameId, position: i });
+    }
+  };
+
+  socket.on('update', function (data) {
+    console.log('data', data);
+    makeMove(data.position);
+
+    if (data.isWin) {
+      highlightSquares(data.winningSquares);
+      var notification = (data.lastTurn === gameSettings.playerMarker) ? 'You win!' : 'You lose!';
+      $('.notifier').html(notification);
+      $('.playagain').show();
+    } else if (data.isTie) {
+      $('.notifier').html("It's a tie!");
+      $('.playagain').show();
+    }
+  });
+
+  function updateBoard(board){
+    for (var i=0; i < board.length; i++){
+      updateSquare(i);
+    }
+  }
+
+  function makeMove(i){
+      $scope.isTurn = !($scope.isTurn);
+      updateSquare(i);
+      notifyTurn();
+  }
+
+  function updateSquare(i){
+    $scope.board[i].move = $scope.isTurn ? gameSettings.playerMarker : opponentMarker;
+  }
+
+  function notifyTurn() {
+    var fillText = ($scope.isTurn) ? 'your' : opponentMarker + "'s";
+    $scope.notification = "It's " + fillText + " turn!";
+  }
+}
+/*
+function gameCtrl($scope, socket){
+  $scope.info = 0;
+  $scope.testclick = testFunk;
+
+
+  function testFunk(){
+    $scope.info++;
+    socket.emit('play', { id: gameId, position: 1 });
+  }
+
+  testFunk();
+  $scope.testclick();
+}*/

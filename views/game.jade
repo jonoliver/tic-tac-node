@@ -1,21 +1,20 @@
 extends layout
 block content
-  div.gameContainer
-    div#cell-0.cell.top.left
-    div#cell-1.cell.top
-    div#cell-2.cell.top.right
-    div#cell-3.cell.left
-    div#cell-4.cell.center
-    div#cell-5.cell.right
-    div#cell-6.cell.bottom.left
-    div#cell-7.cell.bottom
-    div#cell-8.cell.bottom.right
+  div.container(ng-app='app')
+    div(ng-controller='gameCtrl')
+      div.gameContainer
+        div(class='cell {{cell.css}}' ng-repeat='cell in board' ng-click='play($index)') 
+          span.move {{cell.move}}
 
-  div.clear
-  div.info
-    p.notifier.hidden
-    a.playagain.hidden Play again?
+      div.clear
+      div.info
+        p{{notification}}
+        a.playagain.hidden Play again?
   
+      div(ng-controller='gameCtrl')
+        div{{info}}
+        a(ng-click='testclick()') click me
+
   script(src='http://codeorigin.jquery.com/jquery-2.0.3.min.js')
   script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js')
   script(src='/socket.io/socket.io.js')
