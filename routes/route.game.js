@@ -1,6 +1,6 @@
 var Game = require('../modules/game');
 
-exports.gameRoute = function(req, res){
+exports.game = function(req, res){
   var gameId = req.query.id || null;
   var game = Game.get(gameId);
   var playerId = req.session.id;

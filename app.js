@@ -6,7 +6,7 @@
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/route.user');
-var game = require('./routes/route.game');
+var gameRoute = require('./routes/route.game');
 var socketRoute = require('./routes/route.socket');
 var http = require('http');
 var path = require('path');
@@ -49,7 +49,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
-app.get('/game', game.gameRoute);
+app.get('/game', gameRoute.game);
 
 /* json test
 var keepIt = [];

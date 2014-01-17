@@ -35,7 +35,7 @@ describe('Game route', function () {
   describe('Query string has NO game id', function () {
 
     it('creates new game', function () {
-      route.gameRoute(req, res);
+      route.game(req, res);
       sinon.assert.calledOnce(game.create);
       sinon.assert.calledWith(game.create, null);
     });
@@ -49,7 +49,7 @@ describe('Game route', function () {
 
         req.query.id = 'gameId';
 
-        route.gameRoute(req, res);
+        route.game(req, res);
         sinon.assert.calledOnce(game.get);
       });
     });
@@ -59,7 +59,7 @@ describe('Game route', function () {
       it('creates new game', function () {
         gameGet.returns(null);
         req.query.id = 'gameId';
-        route.gameRoute(req, res);
+        route.game(req, res);
         sinon.assert.calledOnce(game.create);
         sinon.assert.calledWith(game.create, req.query.id);
       });
@@ -74,7 +74,7 @@ describe('Game route', function () {
 		var gameJoin = sinon.stub(testGame, 'join').returns(true);
 		gameCreate.returns(testGame);
 		req.session.playerId = 'playerId';	
-		route.gameRoute(req, res);
+		route.game(req, res);
 		
 		sinon.assert.calledOnce(game.join);
 		sinon.assert.calledWith(game.join, req.session.playerId);
@@ -88,13 +88,13 @@ describe('Game route', function () {
 			.returns({ id: 'playerId!'});
 			
 			it('creates new player', function(){
-				route.gameRoute(req, res);
+				route.game(req, res);
 				sinon.assert.calledOnce(player.create);
 				
 			});
 			it('stores player id in session', function(){
 				assert.equal(req.session.playerId, undefined);
-				route.gameRoute(req, res);
+				route.game(req, res);
 				console.log('req', req);
 				assert.equal(req.session.playerId, 'playerId!');
 			});
@@ -112,7 +112,7 @@ describe('Game route', function () {
 			});
 			it('retrieves existing player', function(){
 				req.session.playerId = 'playerId';
-				route.gameRoute(req, res);
+				route.game(req, res);
 			});
 		});
 	});	
