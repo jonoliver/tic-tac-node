@@ -3,18 +3,14 @@ block content
   div.container(ng-app='app')
     div(ng-controller='gameCtrl')
       div.gameContainer
-        div(class='cell {{cell.css}}' ng-repeat='cell in board' ng-click='play($index)') 
-          span.move {{cell.move}}
+        div(class='cell {{cell.css}}' ng-class="{locked: !isTurn}" ng-repeat='cell in board' ng-click='play($index)') 
+          span.move(ng-class="{highlight: highlights.indexOf($index) > -1}") {{cell.move}}
 
       div.clear
       div.info
         p{{notification}}
         a.playagain.hidden Play again?
   
-      div(ng-controller='gameCtrl')
-        div{{info}}
-        a(ng-click='testclick()') click me
-
   script(src='http://codeorigin.jquery.com/jquery-2.0.3.min.js')
   script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js')
   script(src='/socket.io/socket.io.js')

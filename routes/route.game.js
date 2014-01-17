@@ -21,30 +21,12 @@ exports.gameRoute = function(req, res){
     console.log('auth');
     console.log(auth);
     res.render('game', { 
-      title: 'DEV TAB!!!', 
+      title: 'TIC|TAC|NODE', 
       player: auth.player, 
       turn: game.getTurn(),
       board: auth.board 
     });
   }
-};
-
-//TODO: get rid of this. wire tests to gameRoute method above
-exports.game = function(req, res){
-  var player = Player.get(req.session.playerId || null);
-  if (player === null) {
-    player = Player.create(req.query.name || 'Robert Paulson');
-    req.session.playerId = player.id;
-  }
-  
-  var gameId = req.query.id || null;
-  var game = Game.get(gameId);
-  if (game === null) {
-    game = Game.create(gameId);
-  }
-  
-  game.authenticate(player.id);
-  res.render('game', { title: 'DEV TAB!!!', player: player, game: game });
 };
 
 //TODO: figure out how to structure this code so that methods can share instance of Game
@@ -106,7 +88,9 @@ exports.onConnection = function(socket, sessionStore, cookieParser){
       socket.broadcast.to(gameId).emit('update', returnData);
       
       if (returnData.isWin || returnData.isTie) {
-        socket.emit('update', returnData);
+        // only broadcast to opponent once if game is over (do not broadcast update above)
+        socket.broadcast.to(gameId).emit('gameover', returnData);
+        socket.emit('gameover', returnData);
       }
   }
    
