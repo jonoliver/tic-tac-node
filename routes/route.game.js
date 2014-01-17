@@ -82,7 +82,7 @@ exports.onConnection = function(socket, sessionStore, cookieParser){
     console.log('returnData.error');
     console.log(returnData.error);
     if (returnData.error) {
-      socket.emit('error', returnData);
+      socket.emit('playerror', returnData);
     }
     else{
       socket.broadcast.to(gameId).emit('update', returnData);

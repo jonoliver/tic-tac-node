@@ -1,12 +1,5 @@
 var gameId = GetQueryVariable(window.location.search, 'id');
-//var socket = io.connect('?id=' + gameId);
 console.log(gameSettings);
-/*
-socket.on('error', function (data) {
-  console.log('error', data.error);
-  resetSquare(data.position);
-});
-*/
 // DOM EVENTS
 
 $('.playagain').click(function(){
@@ -15,16 +8,6 @@ $('.playagain').click(function(){
   $(this).hide();
 });
 // END DOM EVENTS
-
-function resetSquare(position) {
-  $('#cell-' + position).html('');
-}
-
-function resetBoard() {
-  $('.cell').html('')
-        .removeClass('locked');
-}
-
 
 // parses the query string provided and returns the value
 function GetQueryVariable(query, name) {
@@ -114,6 +97,13 @@ function gameCtrl($scope, socket){
     }
   });
 
+  socket.on('playerror', function (data) {
+    console.log('error', data.error);
+    resetSquare(data.position);
+    $scope.isTurn = !($scope.isTurn);
+    notifyTurn();
+  });
+
   function updateBoard(board){
     for (var i=0; i < board.length; i++){
       $scope.board[i].move = board[i];
@@ -135,18 +125,7 @@ function gameCtrl($scope, socket){
     var fillText = ($scope.isTurn) ? 'your' : opponentMarker + "'s";
     $scope.notification = "It's " + fillText + " turn!";
   }
-}
-/*
-function gameCtrl($scope, socket){
-  $scope.info = 0;
-  $scope.testclick = testFunk;
-
-
-  function testFunk(){
-    $scope.info++;
-    socket.emit('play', { id: gameId, position: 1 });
+  function resetSquare(i){
+    delete $scope.board[i].move;
   }
-
-  testFunk();
-  $scope.testclick();
-}*/
+}
