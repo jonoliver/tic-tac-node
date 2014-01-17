@@ -14,7 +14,6 @@ function GetQueryVariable(query, name) {
   return "";
 }
 
-// angular
 var app = angular.module('app', []);
 
 app.factory('socket', function ($rootScope) {

@@ -7,6 +7,7 @@ var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/route.user');
 var game = require('./routes/route.game');
+var socketRoute = require('./routes/route.socket');
 var http = require('http');
 var path = require('path');
 var io = require('socket.io');
@@ -58,8 +59,6 @@ app.get('/jsontest', function(req,res){
 });
 */
 
-var Game = require('./modules/game');
-
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
@@ -73,5 +72,5 @@ io.listen(server)
 })
 */
 .on('connection',function(socket){ 
-  game.onConnection(socket, sessionStore, cookieParser);
+  socketRoute.onConnection(socket, sessionStore, cookieParser);
 });
