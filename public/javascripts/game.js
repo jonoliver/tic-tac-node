@@ -1,13 +1,5 @@
 var gameId = GetQueryVariable(window.location.search, 'id');
 console.log(gameSettings);
-// DOM EVENTS
-
-$('.playagain').click(function(){
-  //TODO: call to server to get new game properties
-  resetBoard();
-  $(this).hide();
-});
-// END DOM EVENTS
 
 // parses the query string provided and returns the value
 function GetQueryVariable(query, name) {
@@ -21,6 +13,7 @@ function GetQueryVariable(query, name) {
   }
   return "";
 }
+
 // angular
 var app = angular.module('app', []);
 
@@ -67,15 +60,22 @@ function gameCtrl($scope, socket){
   $scope.isTurn = (gameSettings.playerMarker === gameSettings.currentTurn);
   $scope.notification = '';
   $scope.highlights = [];
+  $scope.isGameOver = false;
 
   updateBoard(gameSettings.savedBoard);
   notifyTurn();
 
   $scope.play = function(i){
-    if ($scope.isTurn){
+    if ($scope.isTurn && $scope.board[i].move === undefined){
       makeMove(i);
       socket.emit('play', { id: gameId, position: i });
     }
+  };
+
+  $scope.resetGame = function(){
+    $scope.isGameOver = false;
+    resetBoard();
+    // determine turn and notify
   };
 
   socket.on('update', function (data) {
@@ -85,15 +85,14 @@ function gameCtrl($scope, socket){
 
   socket.on('gameover', function (data) {
     console.log('data', data);
+    $scope.isGameOver = true;
 
     if (data.isWin) {
       $scope.highlights = data.winningSquares;
       $scope.notification = (data.lastTurn === gameSettings.playerMarker) ? 'You win!' : 'You lose!';
       
-      $('.playagain').show();
     } else if (data.isTie) {
       $scope.notification = "It's a tie!";
-      $('.playagain').show();
     }
   });
 
@@ -104,21 +103,25 @@ function gameCtrl($scope, socket){
     notifyTurn();
   });
 
+  function resetBoard(board){
+    for (var i=0; i <8; i++){
+      delete $scope.board[i].move;
+    }
+  }
+
   function updateBoard(board){
     for (var i=0; i < board.length; i++){
-      $scope.board[i].move = board[i];
+      if (board[i] !== "" && board[i] !== undefined && board[i] !== null){
+        $scope.board[i].move = board[i];
+      }
     }
   }
 
   function makeMove(i){
-    updateSquare(i);
+    $scope.board[i].move = $scope.isTurn ? gameSettings.playerMarker : opponentMarker;
     $scope.highlights = [i];
     $scope.isTurn = !($scope.isTurn);
     notifyTurn();
-  }
-
-  function updateSquare(i){
-    $scope.board[i].move = $scope.isTurn ? gameSettings.playerMarker : opponentMarker;
   }
 
   function notifyTurn() {

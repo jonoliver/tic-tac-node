@@ -9,7 +9,7 @@ block content
       div.clear
       div.info
         p{{notification}}
-        a.playagain.hidden Play again?
+        a.playagain(ng-click='resetGame()' ng-show='isGameOver') Play again?
   
   script(src='http://codeorigin.jquery.com/jquery-2.0.3.min.js')
   script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js')
